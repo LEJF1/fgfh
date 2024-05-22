@@ -1,35 +1,35 @@
-/* Автоматическое создание пользователей со случайными паролями (5 символов) */
--- создание переменных для цикла
+/* РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРѕРµ СЃРѕР·РґР°РЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ СЃРѕ СЃР»СѓС‡Р°Р№РЅС‹РјРё РїР°СЂРѕР»СЏРјРё (5 СЃРёРјРІРѕР»РѕРІ) */
+-- СЃРѕР·РґР°РЅРёРµ РїРµСЂРµРјРµРЅРЅС‹С… РґР»СЏ С†РёРєР»Р°
 declare @id int = 1;
 declare @username NVARCHAR(50);
 declare @password NVARCHAR(5);
 declare @dbname NVARCHAR(50);
 
--- цикл для создания пользователей
+-- С†РёРєР» РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
 while @id <= 10
 begin
 	set @username = 'user' + cast(@id as NVARCHAR(10));
 	set @password = left(convert(varchar(50), newid()), 5);
 	set @dbname = 'db' + cast(@id as nvarchar(10));
 
-	-- создание пользователя
+	-- СЃРѕР·РґР°РЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 	exec sp_addlogin @loginame = @username, @passwd = @password;
 
-	-- создание базы данных
+	-- СЃРѕР·РґР°РЅРёРµ Р±Р°Р·С‹ РґР°РЅРЅС‹С…
 	exec ('create database ' + @dbname);
 
-	-- выдача прав пользователю
+	-- РІС‹РґР°С‡Р° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
 	exec ('use ' + @dbname + '; create user ' + @username + ' for login ' + @username + '; ALTER ROLE db_owner ADD MEMBER ' + @username)
 
-	-- вывод результата
+	--  РІС‹РІРѕРґ СЂРµР·СѓР»СЊС‚Р°С‚Р°
 	print 'Created user: ' + @username + ' with password: ' + @password;
 
-	-- переход к следующему пользователю
+	-- РїРµСЂРµС…РѕРґ Рє СЃР»РµРґСѓСЋС‰РµРјСѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
 	set @id = @id + 1;
 end
 go
 
-/* создание базы данных */
+/*СЃРѕР·РґР°РЅРёРµ Р±Р°Р·С‹ РґР°РЅРЅС‹С… */
 create database UsersDB;
 
 use UsersDB
@@ -38,13 +38,13 @@ create table Users
 userName nvarchar(50) not null,
 password nvarchar(5) not null);
 
-/* заполнение таблицы */
+/*  Р·Р°РїРѕР»РЅРµРЅРёРµ С‚Р°Р±Р»РёС†С‹  */
 use UsersDB
 declare @id int = 1;
 declare @username NVARCHAR(50);
 declare @password NVARCHAR(5);
 
--- цикл для создания пользователей
+-- С†РёРєР» РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
 while @id <= 10
 begin
 	set @username = 'user' + cast(@id as NVARCHAR(10));
@@ -57,7 +57,7 @@ begin
 end
 go
 
-/* шифрование паролей */
+/* С€РёС„СЂРѕРІР°РЅРёРµ РїР°СЂРѕР»РµР№ */
 use UsersDB
 alter table Users
 add EncryptedPassword varbinary(max);
